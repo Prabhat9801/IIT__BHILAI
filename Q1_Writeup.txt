@@ -1,0 +1,100 @@
+Title - Train Station Management System - Durg Railway Station Management 
+
+About this Problem: This is a program I made for managing train schedules at Durg station. It keeps track of trains - which ones are coming, which ones are leaving, what platform they're using, timings etc.
+And I used Python because thats what we've been learning in class. I split everything into classes for trains, platforms, schedules and stuff.
+
+Code Architecture:
+
+1. Train Class - holds train info like number, name, type, zone. Couple methods to return the data.
+2. Schedule_entry Class - connects a train to a platform + timing. Stores arrival/departure times. Also has a flag for trains that dont stop (just pass through). Has methods to change platform or update times.
+3. Platform Class - each platform has its own list of trains. Can add/remove trains. Functions to find trains arriving in next hour and leaving soon.
+4. Station Class - main thing here. Manages all platforms (I used a dict for this). Keeps list of every train schedule. Can find train by number, change platform, update times etc.
+5. Station_Master Class - like admin controls. Adds new trains, moves them between platforms, marks as passing through.
+6. Interface Class - for showing stuff to user. Displays arrivals/departures in table format, makes the output look decent.
+
+When you run this program: When you start it makes a station object for Durg, sets up station master and interface, prints welcome message, creates 3 platforms.
+Then it asks if you want to add trains. For each train you enter train number, name, type, zone, which platform (1, 2, or 3), running days, arrival/departure times, destination, does it stop here or just pass through.
+
+After adding trains you get a menu with 6 options:
+1. View arrivals in next hour (asks for current time, shows trains arriving in next 60min)
+2. View departures (shows departures after current time)
+3. Change platform (give train number and new platform, it moves the train)
+4. Update timing (give train number, new arrival and departure time)
+5. Mark as passing through (for trains that dont stop)
+6. Exit (quits the program)
+
+How it works:
+
+Finding arrivals - I make an empty list first, then go through each platform and check all trains on it. If the train is not passing through and its arrival time is between current time and current time+1, I add it to the list.
+
+Finding departures - similar thing, start with empty list and check all trains. If the train is not just passing through and departure time is after current time, add it to the list.
+
+Changing platform - first find the train using its number. Then remove it from the old platform list, update the schedule with new platform number, and add it to the new platform list.
+
+Pseudocode (how program flows):
+
+First the program starts and creates the station object, station master, and interface. Then it prints welcome message and makes 3 platforms.
+
+Then it asks do you want to add trains. If you say yes it will ask you for train number, name, type, zone, which platform you want, running days, arrival time, departure time, destination, and whether train stops or just passes through. After you enter all that it adds the train to schedule. It keeps asking until you say no.
+
+After that you get the main menu which has 6 choices:
+
+Choice 1 - it asks what is current time. Then it goes through all platforms and their trains. For each train it checks is arrival time within next 1 hour from current time. If yes it adds to a list. At the end it shows all trains in that list.
+
+Choice 2 - asks for current time again. Goes through all trains and checks if departure time is after current time. If yes adds to list. Then shows the list.
+
+Choice 3 - asks which train number and which new platform. First it searches for that train in the schedule. If found it removes train from old platform list, changes platform number in schedule, and adds train to new platform list. Prints success.
+
+Choice 4 - asks for train number, new arrival time, new departure time. Finds the train and updates both times. Prints success.
+
+Choice 5 - asks for train number and passing time. Finds the train, sets a flag that says its passing through, makes arrival and departure None, saves the passing time. Prints success.
+
+Choice 6 - just prints goodbye and exits.
+
+After you pick any option it goes back to showing menu again until you pick exit.
+
+Why I did it this way:
+
+I used a dictionary for platforms because you can directly access platforms[1] instead of looping through a list every time which is faster.
+
+I made separate classes for Platform and Station because my friend told me its better to keep things organized. Platform handles its own trains and Station handles all platforms.
+
+I used while loops in some places instead of for loops because sometimes I needed more control like when skipping certain trains or doing manual counting.
+
+For strings I used + instead of f-strings because I kept making mistakes with f-string syntax and this way just works.
+
+Problems I faced:
+
+The passing through trains part - I completely forgot about this initially. Some trains dont stop at Durg they just pass through. Had to add a flag and handle it in all the functions.
+
+Moving trains between platforms was tricky. You have to remove from old platform first, then update the schedule, then add to new platform. If you mess up the order it breaks.
+
+For time I just used numbers like 14 means 2pm. Makes it easy to compare times.
+
+Data I used:
+
+platforms - dictionary where keys are 1,2,3 and values are Platform objects
+scheduled_trains - list on each platform that holds all trains
+schedules - master list in Station class that has every train
+
+Testing:
+
+I just ran the program many times with different inputs. Added some trains, checked if arrivals and departures show correctly, tried changing platforms, updated timings, marked some as passing through, and put wrong inputs to see if it breaks.
+
+What could be better:
+
+If I had time I would add actual dates, track delays, save the data to a file so it doesnt disappear when program closes, add passenger numbers, maybe make a GUI.
+
+Summary:
+
+The program works fine for managing train schedules at one station. Its simple but does the job. About 470 lines, uses 6 classes, dictionaries and lists for storing data.
+
+References: Class notes on Python OOP, Python documentation, my previous assignments
+
+
+
+
+
+
+
+
