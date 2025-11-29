@@ -1,29 +1,44 @@
 class Train:
     def __init__(self,train_no,train_name,train_type,zone):
+        # train_no stores the unique train number like 12345
         self.train_no=train_no
+        # train_name holds the name of the train
         self.train_name=train_name
+        # train_type tells if its Express or Passenger etc
         self.train_type=train_type
+        # zone is the railway zone like South Central etc
         self.zone=zone
     
     def train_details(self):
+        # details is a tuple that packs all train info together
         details=(self.train_no,self.train_name,self.train_type,self.zone)
         return details
     
     def get_number(self):
+        # n is just a copy of train number to return
         n=self.train_no
         return n
     
 
 class Schedule_entry:
     def __init__(self,train,platform_no,departure_days,arrival_time,departure_time,passing_through,from_station,to_station):
+        # train object contains all train details
         self.train=train
+        # platform_no is which platform like 1, 2, 3
         self.platform_no=platform_no
+        # departure_days is list of days train runs like Mon, Tue
         self.departure_days=departure_days
+        # arrival_time when train arrives in 24hr format
         self.arrival_time=arrival_time
+        # departure_time when train leaves the station
         self.departure_time=departure_time
+        # passing_through is True if train doesnt stop
         self.passing_through=passing_through
+        # from_station is where train is coming from
         self.from_station=from_station
+        # to_station is the destination
         self.to_station=to_station
+        # status tracks if train is on time or delayed
         self.status="On Time"
 
     def update_platform(self,new_platform_no):
@@ -55,7 +70,9 @@ class Schedule_entry:
         
 class Platform:
     def __init__(self,platform_no):
+        # platform_no identifies this platform
         self.platform_no=platform_no
+        # scheduled_trains is list of all trains scheduled on this platform
         self.scheduled_trains=[]
     
     def add_train_schedule(self,schedule_entry):
@@ -66,9 +83,12 @@ class Platform:
             self.scheduled_trains.remove(schedule_entry)
     
     def arrivals_in_next_hour(self,current_time):
+        # arrivals stores all trains arriving in next hour
         arrivals=[]
+        # i is loop counter to go through all trains
         i=0
         while i<len(self.scheduled_trains):
+            # entry is current train schedule we are checking
             entry=self.scheduled_trains[i]
             if entry.passing_through==True:
                 i=i+1
@@ -95,8 +115,11 @@ class Platform:
 
 class Station:
     def __init__(self,name):
+        # station_name is the name like Durg or Mumbai etc
         self.station_name=name
+        # platforms dictionary maps platform numbers to Platform objects
         self.platforms={}  # dictionary of platforms
+        # schedules list keeps all train schedules at this station
         self.schedules=[]  # list of all train schedules
     
     def add_platform(self,platform_no):
@@ -121,11 +144,16 @@ class Station:
         
     def find_train_no(self,train_no):
         # search through all schedules
+        # result will store the found schedule or None
         result=None
+        # i is counter for loop
         i=0
+        # schedule_count is total number of schedules
         schedule_count=len(self.schedules)
         while i<schedule_count:
+            # sched is current schedule entry being checked
             sched=self.schedules[i]
+            # train_number extracted from current schedule
             train_number=sched.train.train_no
             if train_number==train_no:
                 result=sched
@@ -135,13 +163,17 @@ class Station:
     
 
     def change_platform(self,train_no,new_platform_no):
+        # sched holds the train schedule we want to change
         sched=self.find_train_no(train_no)
         if sched==None:
             print("Train not found in schedule")
             return
         
+        # current_platform_no is where train is scheduled now
         current_platform_no=sched.platform_no
+        # current_platform is the Platform object train is on now
         current_platform=self.get_platform(current_platform_no)
+        # target_platform is the new Platform object we moving to
         target_platform=self.get_platform(new_platform_no)
         
         # remove from old platform
@@ -293,9 +325,13 @@ class Interface:
 
 def main():
     # initialize station
+    # stn_name is the station name we are managing
     stn_name="Durg"
+    # s is the main Station object
     s=Station(stn_name)
+    # master is Station_Master who manages scheduling
     master=Station_Master(s)
+    # ui is Interface for displaying information
     ui=Interface(s)
 
     # print welcome message

@@ -1,15 +1,20 @@
 class Leaf:
     def __init__(self,label):
+        # label is the class prediction at this leaf
         self.label=label
     
     def get_label(self):
+        # l is copy of label to return
         l=self.label
         return l
 
 class Node:
     def __init__(self,feature,left_child,right_child):
+        # feature is which feature we split on at this node
         self.feature=feature
+        # left is the left subtree when feature is 0
         self.left=left_child
+        # right is the right subtree when feature is 1
         self.right=right_child
     
     def get_feature(self):
@@ -25,35 +30,53 @@ class Node:
 
 class DecisionTree:
     def __init__(self):
+        # root is the top node of our decision tree
         self.root=None
     
     def train(self,data,features):
         # build the tree
+        # f_copy is copy of features list
         f_copy=features.copy()
+        # rem holds remaining features to use
         rem=f_copy
+        # tree_result gets the built tree structure
         tree_result=self._train_recursive(data,rem)
+        # t is another name for the tree
         t=tree_result
+        # root is set to the completed tree
         self.root=t
     
     def _train_recursive(self,data,remaining_features):
         # find most frequent label
+        # most_freq stores the label that appears most in data
         most_freq=self._most_frequent_label(data)
+        # g is another name for most frequent label
         g=most_freq
         
         # check if labels are unambiguous
+        # unambig_result tells if all labels are same
         unambig_result=self._check_unambiguous(data)
+        # is_unambig checks if result is True
         is_unambig=(unambig_result==True)
+        # check_unambig is final boolean check
         check_unambig=is_unambig
         if check_unambig:
+            # new_leaf creates a Leaf node with label
             new_leaf=Leaf(g)
+            # lf is another name for the leaf
             lf=new_leaf
+            # result is what we return
             result=lf
             return result
         
         # check if no features left
+        # feat_count is number of remaining features
         feat_count=len(remaining_features)
+        # num_features is another name for count
         num_features=feat_count
+        # zero_features checks if count is 0
         zero_features=(num_features==0)
+        # no_features is final check
         no_features=zero_features
         if no_features:
             new_leaf=Leaf(g)
@@ -62,28 +85,44 @@ class DecisionTree:
             return result
         
         # need to split further
+        # score_dict maps each feature to its score
         score_dict={}
+        # temp_list is copy of remaining features
         temp_list=list(remaining_features)
+        # feat_list is list of features to check
         feat_list=temp_list
+        # list_len is how many features we have
         list_len=len(feat_list)
+        # counter tracks which feature we are on
         counter=0
+        # keep_going controls the loop
         keep_going=True
+        # continue_loop is flag for while loop
         continue_loop=keep_going
         while continue_loop:
+            # reached_end checks if we finished all features
             reached_end=(counter>=list_len)
             if reached_end:
                 keep_going=False
                 continue_loop=False
                 break
+            # current_feature is the feature we are checking now
             current_feature=feat_list[counter]
+            # feature is another name for it
             feature=current_feature
             
             # split data by feature
+            # no_list holds data points where feature is 0
             no_list=[]
+            # yes_list holds data points where feature is 1
             yes_list=[]
+            # total_data is number of data points
             total_data=len(data)
+            # data_size is another name for total
             data_size=total_data
+            # idx is index for loop
             idx=0
+            # processing controls inner loop
             processing=True
             while processing:
                 done_processing=(idx>=data_size)
@@ -280,21 +319,28 @@ class DecisionTree:
     
     def test(self,test_point):
         # traverse tree to get prediction
+        # curr is current node we are at
         curr=self.root
         
+        # finished tracks if we reached a leaf
         finished=False
         while finished==False:
             # check if leaf
+            # check_leaf is True if current node is Leaf
             check_leaf=isinstance(curr,Leaf)
             if check_leaf:
+                # pred is the predicted label
                 pred=curr.get_label()
                 return pred
             
             # its a node, get feature
+            # feat is which feature to check
             feat=curr.get_feature()
+            # feat_val is value of that feature in test point
             feat_val=test_point[feat]
             
             # go left or right
+            # go_left is True if feature value is 0
             go_left=(feat_val==0)
             if go_left:
                 curr=curr.get_left()
