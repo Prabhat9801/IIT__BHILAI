@@ -1,0 +1,76 @@
+Title - Decision Tree Implementation - Machine Learning Algorithm
+
+About this Problem: This is a decision tree program I made for binary classification. It takes data with binary features (0 or 1) and multiple labels, builds a tree by splitting on best features, and then can predict labels for new data points.
+I used Python and made it object oriented with classes for Leaf nodes, internal Nodes, and the main DecisionTree class.
+
+Code Architecture:
+
+1. Leaf Class - represents end nodes in the tree. Just stores a label and has a method to return it.
+2. Node Class - represents decision nodes. Stores which feature to split on, and has left child (for feature=0) and right child (for feature=1). Methods to get the feature and both children.
+3. DecisionTree Class - main class that builds and tests the tree. Has train method that takes data and features, builds tree recursively. Has test method to predict labels for new points.
+
+When you run this program: You create a DecisionTree object, call train with your data and feature set, then call test with test points to get predictions.
+
+How it works:
+
+Training - starts with all data and all features. Finds most common label as default guess. If all data has same label, makes a leaf and returns. If no features left, makes a leaf with default guess. Otherwise it tries every remaining feature, splits data into feature=0 and feature=1 groups, counts how many majority labels in each group, picks feature with highest total count. Then splits data by best feature and recursively builds left and right subtrees.
+
+Testing - starts at root, checks if its a leaf (return the label). If its a node, gets the feature, looks up that features value in test point. If value is 0 goes left, if 1 goes right. Keeps doing this until hits a leaf.
+
+Pseudocode (how it flows):
+
+Training starts by calling train method with data and features. This calls the recursive training function.
+
+In recursive training first it finds most common label in current data as default answer. Then checks if all labels are same, if yes make leaf with that label and return. Next checks if no features left, if yes make leaf with default label and return.
+
+If still have features to split on, it goes through each remaining feature. For each feature it splits data into two groups - one where feature is 0, one where feature is 1. Then counts majority labels in each group and adds them up. This total is the score for that feature.
+
+After checking all features it picks the one with highest score. Splits data by that feature into no group and yes group. Removes that feature from remaining features list. Then calls itself recursively on no group to build left subtree, and on yes group to build right subtree. Creates a node with the feature and both subtrees and returns it.
+
+Testing takes a test point and starts at root. Keeps looping until done. Checks if current node is a leaf, if yes return its label. Otherwise get the feature from node, look up that features value in test point. If 0 go to left child, if 1 go to right child. Keep going until hit a leaf.
+
+Why I did it this way:
+
+Used recursion for building tree because each subtree is just a smaller version of same problem. Made sense to call same function on subsets of data.
+
+Stored tree as objects (Leaf and Node) instead of just nested lists or dicts because its cleaner and easier to check what type of node you're at.
+
+The scoring function counts majority labels because thats what the algorithm said to do. Its basically measuring how well we can classify if we only ask that one feature.
+
+Dictionary for storing data points made it easy to access features by name instead of remembering indices.
+
+Used while loops with manual counters in most places because I needed to track index explicitly and sometimes do weird increments or breaks.
+
+Problems I faced:
+
+Keeping track of remaining features was tricky. Had to make sure to copy the set before removing features so it doesnt mess up other recursive calls.
+
+The scoring part took me a while to understand. You split data by each feature, find majority in each split, add them up. Higher score means that feature separates the classes better.
+
+Making sure test function doesnt loop forever. Had to be careful that every path eventually reaches a leaf.
+
+Getting the left/right convention right. I used 0 goes left, 1 goes right. Had to be consistent everywhere.
+
+Data I used:
+
+Each data point is a dictionary with feature names as keys, values are 0 or 1, plus a 'label' key for the class.
+Features stored as a set so I can easily remove them.
+Tree is built with Leaf and Node objects connected in tree structure.
+
+Testing:
+
+Just tested with small datasets manually. Made up some simple examples with 2-3 features. Checked if tree structure makes sense. Tested predictions on training data to see if it learned correctly. Tried some new points to see predictions.
+
+What could be better:
+
+Could add support for non-binary features or continuous values but that wasnt required.
+Could calculate actual accuracy metrics on test set.
+Could add tree pruning to avoid overfitting.
+Could visualize the tree better instead of just text output.
+Could handle missing feature values.
+
+Summary:
+
+The program works for building decision trees on binary data. Its pretty simple implementation of the basic algorithm. About 300 lines, uses 3 classes, recursion for tree building.
+
+References: Class notes on decision trees, the algorithm pseudocode from assignment, Python documentation
